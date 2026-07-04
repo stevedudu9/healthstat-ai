@@ -14,6 +14,7 @@ The app can inspect an uploaded or demo dataset, detect the likely healthcare co
 ## Features
 
 - CSV upload and pasted CSV analysis
+- Streamlit upload support for CSV, Excel, and JSON files
 - Automatic healthcare dataset detection
 - Automatic target-column detection
 - Dataset preview and data quality summary
@@ -36,16 +37,33 @@ No backend server or installation is required for the prototype.
 
 For deployment, the project also includes:
 
+- `streamlit_app.py`
+- `requirements.txt`
 - `outputs/index.html`
 - `netlify.toml`
 - `vercel.json`
 - `outputs/deployment-guide.md`
+
+## Streamlit Community Cloud Deployment
+
+Use these settings in Streamlit Community Cloud:
+
+```text
+Repository: stevedudu9/healthstat-ai
+Branch: main
+Main file path: streamlit_app.py
+```
+
+The Streamlit version supports CSV, Excel, and JSON uploads, report generation, report downloads, dataset downloads, and analysis summary JSON downloads.
+
+After deployment, use `outputs/streamlit-deployment-checklist.md` to verify the live app.
 
 ## Portfolio Materials
 
 The following materials are included to help present, deploy, and discuss the project:
 
 - `outputs/deployment-guide.md`
+- `outputs/streamlit-deployment-checklist.md`
 - `outputs/demo-video-script.md`
 - `outputs/technical-blog-post.md`
 - `outputs/interview-practice-guide.md`
