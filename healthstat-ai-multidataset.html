@@ -1,0 +1,1834 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HealthStat AI - Adaptive Healthcare Analytics</title>
+  <style>
+    :root {
+      --bg: #f6f8fb;
+      --panel: #ffffff;
+      --ink: #17202a;
+      --muted: #637083;
+      --line: #dce3ec;
+      --blue: #2266d2;
+      --green: #118a63;
+      --red: #cf3f45;
+      --amber: #a96f00;
+      --teal: #087c89;
+      --violet: #6b4cc2;
+      --shadow: 0 16px 40px rgba(20, 31, 51, 0.09);
+      --radius: 8px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--ink);
+      background: var(--bg);
+    }
+
+    button, input, select, textarea { font: inherit; }
+
+    .app {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 280px 1fr;
+    }
+
+    aside {
+      background: #101925;
+      color: #eff5fb;
+      padding: 22px 18px;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow: auto;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .mark {
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, #2b85ff, #23b68b);
+      display: grid;
+      place-items: center;
+      font-weight: 900;
+      color: white;
+    }
+
+    .brand h1 {
+      margin: 0;
+      font-size: 18px;
+      line-height: 1.1;
+    }
+
+    .brand span {
+      display: block;
+      color: #aab8c8;
+      font-size: 12px;
+      margin-top: 3px;
+    }
+
+    .nav-label {
+      color: #8596aa;
+      font-size: 11px;
+      text-transform: uppercase;
+      margin: 22px 8px 8px;
+      font-weight: 800;
+    }
+
+    .nav-button {
+      width: 100%;
+      border: 0;
+      border-radius: 8px;
+      padding: 11px 12px;
+      color: #dce8f5;
+      background: transparent;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      text-align: left;
+      min-height: 42px;
+    }
+
+    .nav-button.active,
+    .nav-button:hover {
+      background: #1f3145;
+      color: #ffffff;
+    }
+
+    .mini-status {
+      margin-top: 22px;
+      background: #182637;
+      border: 1px solid #2c415a;
+      border-radius: var(--radius);
+      padding: 14px;
+      color: #c8d5e4;
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .mini-status strong {
+      color: #ffffff;
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    main {
+      min-width: 0;
+    }
+
+    header {
+      background: var(--panel);
+      border-bottom: 1px solid var(--line);
+      padding: 18px 26px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      position: sticky;
+      top: 0;
+      z-index: 3;
+    }
+
+    .title h2 {
+      margin: 0;
+      font-size: 22px;
+    }
+
+    .title p {
+      margin: 4px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .btn {
+      border: 1px solid var(--line);
+      background: var(--panel);
+      color: var(--ink);
+      border-radius: 8px;
+      min-height: 38px;
+      padding: 9px 12px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .btn.primary {
+      background: var(--blue);
+      border-color: var(--blue);
+      color: #ffffff;
+    }
+
+    .btn:hover {
+      filter: brightness(0.97);
+    }
+
+    .content {
+      padding: 24px 26px 42px;
+      max-width: 1480px;
+    }
+
+    .section { display: none; }
+    .section.active { display: block; }
+
+    .hero-band {
+      background: #ffffff;
+      border-bottom: 1px solid var(--line);
+      padding: 28px 26px;
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(360px, 0.9fr);
+      gap: 26px;
+      align-items: center;
+    }
+
+    .hero-copy h2 {
+      margin: 0;
+      font-size: clamp(28px, 4vw, 48px);
+      line-height: 1.02;
+      max-width: 780px;
+    }
+
+    .hero-copy p {
+      color: var(--muted);
+      font-size: 17px;
+      max-width: 760px;
+      line-height: 1.58;
+    }
+
+    .disclaimer {
+      max-width: 760px;
+      margin: 16px 0 18px;
+      border: 1px solid #f0c66b;
+      border-left: 5px solid var(--amber);
+      background: #fff9ea;
+      border-radius: var(--radius);
+      padding: 13px 14px;
+      color: #4d3a13;
+      line-height: 1.45;
+    }
+
+    .disclaimer strong {
+      display: block;
+      margin-bottom: 4px;
+      color: #3c2d0d;
+    }
+
+    .hero-visual {
+      background: #eef4fa;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 16px;
+      min-height: 285px;
+      display: grid;
+      grid-template-rows: auto 1fr;
+      gap: 16px;
+      box-shadow: var(--shadow);
+    }
+
+    .signal-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+    }
+
+    .signal {
+      height: 58px;
+      background: #ffffff;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 9px;
+      display: grid;
+      align-content: center;
+      gap: 4px;
+      min-width: 0;
+    }
+
+    .signal b {
+      font-size: 12px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .signal span {
+      height: 6px;
+      border-radius: 999px;
+      background: #2b85ff;
+    }
+
+    .network {
+      min-height: 190px;
+      position: relative;
+      background:
+        linear-gradient(#dce6f1 1px, transparent 1px),
+        linear-gradient(90deg, #dce6f1 1px, transparent 1px);
+      background-size: 28px 28px;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .node {
+      position: absolute;
+      width: 82px;
+      height: 46px;
+      border: 1px solid #c5d2e0;
+      background: #ffffff;
+      border-radius: 8px;
+      display: grid;
+      place-items: center;
+      font-size: 12px;
+      font-weight: 800;
+      box-shadow: 0 10px 24px rgba(28, 43, 67, 0.1);
+    }
+
+    .node::after {
+      content: "";
+      position: absolute;
+      width: 54px;
+      height: 2px;
+      background: #7b91aa;
+      right: -54px;
+      top: 22px;
+    }
+
+    .node.n1 { left: 6%; top: 20%; }
+    .node.n2 { left: 38%; top: 9%; }
+    .node.n3 { left: 38%; top: 57%; }
+    .node.n4 { right: 7%; top: 34%; color: var(--green); }
+    .node.n2::after, .node.n3::after { width: 80px; right: -80px; }
+    .node.n4::after { display: none; }
+
+    .grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .grid.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .grid.three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .grid.four { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .panel-head {
+      padding: 15px 16px;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .panel-head h3 {
+      margin: 0;
+      font-size: 16px;
+    }
+
+    .panel-head span {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .panel-body {
+      padding: 16px;
+    }
+
+    .upload-zone {
+      border: 1px dashed #9eb0c6;
+      border-radius: var(--radius);
+      background: #fbfdff;
+      padding: 18px;
+      display: grid;
+      gap: 12px;
+      min-height: 214px;
+      align-content: start;
+    }
+
+    .file-input {
+      border: 1px solid var(--line);
+      background: #ffffff;
+      border-radius: 8px;
+      padding: 11px;
+      width: 100%;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 140px;
+      resize: vertical;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 12px;
+      color: var(--ink);
+      background: #ffffff;
+    }
+
+    .sample-buttons {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .sample {
+      border: 1px solid var(--line);
+      background: #ffffff;
+      border-radius: 8px;
+      min-height: 48px;
+      cursor: pointer;
+      font-weight: 800;
+      color: var(--ink);
+    }
+
+    .sample:hover {
+      border-color: #9cb3cc;
+      background: #f8fbff;
+    }
+
+    .kpi {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 16px;
+      min-height: 122px;
+      display: grid;
+      align-content: space-between;
+      box-shadow: var(--shadow);
+    }
+
+    .kpi span {
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .kpi b {
+      font-size: 30px;
+      margin-top: 8px;
+    }
+
+    .kpi small {
+      color: var(--muted);
+      line-height: 1.4;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      min-height: 26px;
+      padding: 4px 9px;
+      border-radius: 999px;
+      background: #eef3f8;
+      color: #3c4d61;
+      font-size: 12px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .badge.green { background: #e7f6ef; color: var(--green); }
+    .badge.red { background: #fdeced; color: var(--red); }
+    .badge.blue { background: #edf4ff; color: var(--blue); }
+    .badge.amber { background: #fff5df; color: var(--amber); }
+    .badge.violet { background: #f1edff; color: var(--violet); }
+
+    .table-wrap {
+      overflow: auto;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      max-height: 420px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+      background: #ffffff;
+    }
+
+    th, td {
+      padding: 10px 11px;
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+      white-space: nowrap;
+    }
+
+    th {
+      background: #f1f5f9;
+      color: #344258;
+      position: sticky;
+      top: 0;
+      z-index: 1;
+    }
+
+    tr:last-child td { border-bottom: 0; }
+
+    canvas {
+      width: 100%;
+      height: 260px;
+      display: block;
+    }
+
+    .chart-tall canvas { height: 360px; }
+
+    .insight-list {
+      display: grid;
+      gap: 10px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .insight-list li {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 12px;
+      background: #fbfdff;
+      line-height: 1.45;
+      color: #2d3b4d;
+    }
+
+    .risk-form {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .field {
+      display: grid;
+      gap: 6px;
+    }
+
+    .field label {
+      color: #44546a;
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .field input,
+    .field select {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 10px;
+      min-height: 40px;
+      width: 100%;
+    }
+
+    .score-ring {
+      width: 190px;
+      height: 190px;
+      border-radius: 50%;
+      margin: 8px auto 16px;
+      display: grid;
+      place-items: center;
+      background: conic-gradient(var(--green) 0deg, var(--green) 130deg, #e5ebf2 130deg);
+    }
+
+    .score-inner {
+      width: 136px;
+      height: 136px;
+      border-radius: 50%;
+      background: white;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      border: 1px solid var(--line);
+    }
+
+    .score-inner b {
+      font-size: 34px;
+    }
+
+    .score-inner span {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .timeline {
+      display: grid;
+      gap: 12px;
+    }
+
+    .step {
+      display: grid;
+      grid-template-columns: 36px 1fr;
+      gap: 12px;
+      align-items: start;
+    }
+
+    .dot {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: #edf4ff;
+      color: var(--blue);
+      display: grid;
+      place-items: center;
+      font-weight: 900;
+    }
+
+    .step b { display: block; margin-bottom: 3px; }
+    .step p { margin: 0; color: var(--muted); line-height: 1.45; }
+
+    .hidden { display: none !important; }
+
+    @media (max-width: 1080px) {
+      .app { grid-template-columns: 1fr; }
+      aside {
+        position: static;
+        height: auto;
+      }
+      .hero-band { grid-template-columns: 1fr; }
+      .grid.four, .grid.three { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+
+    @media (max-width: 720px) {
+      header {
+        position: static;
+        align-items: flex-start;
+        flex-direction: column;
+      }
+      .content, .hero-band { padding: 18px; }
+      .grid.two, .grid.three, .grid.four, .risk-form, .sample-buttons {
+        grid-template-columns: 1fr;
+      }
+      .signal-row { grid-template-columns: repeat(2, 1fr); }
+      .node { width: 72px; font-size: 11px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside>
+      <div class="brand">
+        <div class="mark">H</div>
+        <div>
+          <h1>HealthStat AI</h1>
+          <span>Adaptive healthcare analytics</span>
+        </div>
+      </div>
+
+      <div class="nav-label">Workspace</div>
+      <button class="nav-button active" data-section="dashboard">Overview</button>
+      <button class="nav-button" data-section="data">Data Intake</button>
+      <button class="nav-button" data-section="eda">Exploratory Analysis</button>
+      <button class="nav-button" data-section="model">Risk Prediction</button>
+      <button class="nav-button" data-section="explain">Explainable AI</button>
+      <button class="nav-button" data-section="report">Clinical Report</button>
+
+      <div class="nav-label">Detected Context</div>
+      <div class="mini-status" id="sideStatus">
+        <strong>No dataset loaded</strong>
+        Choose a demo dataset or upload a CSV file to activate adaptive analysis.
+      </div>
+    </aside>
+
+    <main>
+      <header>
+        <div class="title">
+          <h2 id="pageTitle">Overview</h2>
+          <p id="pageSub">A working multi-dataset version of HealthStat AI.</p>
+        </div>
+        <div class="actions">
+          <button class="btn" id="downloadReport">Download Report</button>
+          <button class="btn primary" id="jumpUpload">Load Dataset</button>
+        </div>
+      </header>
+
+      <section class="hero-band">
+        <div class="hero-copy">
+          <h2>One analytics platform, many healthcare datasets.</h2>
+          <p>
+            HealthStat AI reads the uploaded dataset, detects the likely disease context,
+            finds the outcome column, profiles clinical variables, builds a reusable
+            prediction workflow, and adapts the dashboard automatically.
+          </p>
+          <div class="disclaimer">
+            <strong>Research & Educational Use Only</strong>
+            This application is intended for educational and analytical purposes. It is not a medical device, should not be used for diagnosis or treatment decisions, and has not undergone clinical validation.
+          </div>
+          <div class="actions">
+            <button class="btn primary" id="startDemo">Try Heart Demo</button>
+            <button class="btn" id="startUpload">Upload CSV</button>
+          </div>
+        </div>
+        <div class="hero-visual" aria-label="Adaptive analytics workflow">
+          <div class="signal-row">
+            <div class="signal"><b>Heart</b><span style="background:#2266d2;width:78%"></span></div>
+            <div class="signal"><b>Diabetes</b><span style="background:#118a63;width:64%"></span></div>
+            <div class="signal"><b>Cancer</b><span style="background:#cf3f45;width:72%"></span></div>
+            <div class="signal"><b>Stroke</b><span style="background:#a96f00;width:48%"></span></div>
+          </div>
+          <div class="network">
+            <div class="node n1">Dataset</div>
+            <div class="node n2">Detect</div>
+            <div class="node n3">Model</div>
+            <div class="node n4">Insight</div>
+          </div>
+        </div>
+      </section>
+
+      <div class="content">
+        <section class="section active" id="dashboard">
+          <div class="grid four" id="kpiGrid"></div>
+          <div style="height:16px"></div>
+          <div class="grid two">
+            <div class="panel">
+              <div class="panel-head">
+                <h3>Adaptive Dataset Detection</h3>
+                <span id="detectConfidence">Waiting for data</span>
+              </div>
+              <div class="panel-body">
+                <div class="timeline" id="detectionTimeline"></div>
+              </div>
+            </div>
+            <div class="panel chart-tall">
+              <div class="panel-head">
+                <h3>Outcome Distribution</h3>
+                <span id="outcomeLabel">No outcome detected</span>
+              </div>
+              <div class="panel-body">
+                <canvas id="outcomeChart"></canvas>
+              </div>
+            </div>
+          </div>
+          <div style="height:16px"></div>
+          <div class="grid two">
+            <div class="panel">
+              <div class="panel-head">
+                <h3>Clinical Insights</h3>
+                <span>Auto-generated</span>
+              </div>
+              <div class="panel-body">
+                <ul class="insight-list" id="clinicalInsights"></ul>
+              </div>
+            </div>
+            <div class="panel">
+              <div class="panel-head">
+                <h3>Variable Map</h3>
+                <span>Grouped by role</span>
+              </div>
+              <div class="panel-body" id="variableMap"></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="section" id="data">
+          <div class="grid two">
+            <div class="panel">
+              <div class="panel-head">
+                <h3>Load Healthcare Dataset</h3>
+                <span>CSV supported in this browser build</span>
+              </div>
+              <div class="panel-body">
+                <div class="upload-zone">
+                  <input class="file-input" type="file" id="csvFile" accept=".csv,text/csv" />
+                  <textarea id="csvPaste" placeholder="Paste CSV data here, then press Analyze Pasted CSV"></textarea>
+                  <div class="actions">
+                    <button class="btn primary" id="analyzePaste">Analyze Pasted CSV</button>
+                    <button class="btn" id="clearPaste">Clear</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="panel">
+              <div class="panel-head">
+                <h3>Demo Datasets</h3>
+                <span>Use these to test adaptation</span>
+              </div>
+              <div class="panel-body">
+                <div class="sample-buttons">
+                  <button class="sample" data-demo="heart">Heart Disease</button>
+                  <button class="sample" data-demo="diabetes">Diabetes Risk</button>
+                  <button class="sample" data-demo="breast">Breast Cancer</button>
+                  <button class="sample" data-demo="stroke">Stroke Risk</button>
+                </div>
+                <div style="height:14px"></div>
+                <ul class="insight-list">
+                  <li>Each demo has different column names, targets, and feature types.</li>
+                  <li>The platform detects disease context by matching clinical field patterns.</li>
+                  <li>Custom datasets are handled with the same schema detector.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div style="height:16px"></div>
+          <div class="panel">
+            <div class="panel-head">
+              <h3>Dataset Preview</h3>
+              <span id="previewLabel">No rows loaded</span>
+            </div>
+            <div class="panel-body">
+              <div class="table-wrap" id="previewTable"></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="section" id="eda">
+          <div class="grid three" id="qualityGrid"></div>
+          <div style="height:16px"></div>
+          <div class="grid two">
+            <div class="panel chart-tall">
+              <div class="panel-head">
+                <h3>Numeric Distributions</h3>
+                <span>Mean values by feature</span>
+              </div>
+              <div class="panel-body">
+                <canvas id="numericChart"></canvas>
+              </div>
+            </div>
+            <div class="panel chart-tall">
+              <div class="panel-head">
+                <h3>Feature Relationship Strength</h3>
+                <span>Correlation or association with outcome</span>
+              </div>
+              <div class="panel-body">
+                <canvas id="associationChart"></canvas>
+              </div>
+            </div>
+          </div>
+          <div style="height:16px"></div>
+          <div class="panel">
+            <div class="panel-head">
+              <h3>Variable Summary</h3>
+              <span id="summaryLabel">Waiting for dataset</span>
+            </div>
+            <div class="panel-body">
+              <div class="table-wrap" id="summaryTable"></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="section" id="model">
+          <div class="grid two">
+            <div class="panel">
+              <div class="panel-head">
+                <h3>Patient Risk Simulator</h3>
+                <span id="simulatorLabel">Auto-built from dataset</span>
+              </div>
+              <div class="panel-body">
+                <div class="risk-form" id="riskForm"></div>
+                <div style="height:14px"></div>
+                <button class="btn primary" id="scorePatient">Calculate Risk</button>
+              </div>
+            </div>
+            <div class="panel">
+              <div class="panel-head">
+                <h3>Predicted Risk</h3>
+                <span id="riskClass">No score yet</span>
+              </div>
+              <div class="panel-body">
+                <div class="score-ring" id="scoreRing">
+                  <div class="score-inner">
+                    <div>
+                      <b id="riskScore">--</b>
+                      <span>Probability</span>
+                    </div>
+                  </div>
+                </div>
+                <ul class="insight-list" id="riskExplanation"></ul>
+              </div>
+            </div>
+          </div>
+          <div style="height:16px"></div>
+          <div class="grid three" id="modelGrid"></div>
+        </section>
+
+        <section class="section" id="explain">
+          <div class="grid two">
+            <div class="panel chart-tall">
+              <div class="panel-head">
+                <h3>Top Risk Factors</h3>
+                <span>Ranked by observed association</span>
+              </div>
+              <div class="panel-body">
+                <canvas id="importanceChart"></canvas>
+              </div>
+            </div>
+            <div class="panel">
+              <div class="panel-head">
+                <h3>Interpretation Template</h3>
+                <span id="templateLabel">Adaptive language</span>
+              </div>
+              <div class="panel-body">
+                <ul class="insight-list" id="interpretationList"></ul>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="section" id="report">
+          <div class="panel">
+            <div class="panel-head">
+              <h3>Automated Clinical Report</h3>
+              <span>Generated from current dataset</span>
+            </div>
+            <div class="panel-body" id="reportBody"></div>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    const state = {
+      rows: [],
+      columns: [],
+      profile: null,
+      currentSection: "dashboard",
+      source: "No dataset"
+    };
+
+    const diseaseProfiles = [
+      {
+        id: "heart",
+        name: "Heart Disease Prediction",
+        badge: "Cardiology",
+        targetHints: ["target", "heartdisease", "heart_disease", "disease", "condition", "num"],
+        keywords: ["cholesterol", "chol", "chest", "cp", "thalach", "oldpeak", "angina", "exang", "slope", "ca", "thal", "trestbps", "restecg"],
+        clinicalMessage: "Cardiometabolic and exercise-response variables are prioritized for risk modeling."
+      },
+      {
+        id: "diabetes",
+        name: "Diabetes Risk Prediction",
+        badge: "Metabolic",
+        targetHints: ["outcome", "diabetes", "diabetic", "class", "target"],
+        keywords: ["glucose", "insulin", "pregnancies", "diabetespedigreefunction", "pedigree", "skinthickness", "bmi", "bloodpressure"],
+        clinicalMessage: "Glucose, BMI, insulin, and metabolic history variables are emphasized."
+      },
+      {
+        id: "breast",
+        name: "Breast Cancer Classification",
+        badge: "Oncology",
+        targetHints: ["diagnosis", "malignant", "benign", "class", "target"],
+        keywords: ["radius", "texture", "perimeter", "area", "smoothness", "compactness", "concavity", "concave", "symmetry", "fractal"],
+        clinicalMessage: "Tumor morphology fields are treated as the main diagnostic signals."
+      },
+      {
+        id: "stroke",
+        name: "Stroke Risk Prediction",
+        badge: "Neurology",
+        targetHints: ["stroke", "target", "outcome"],
+        keywords: ["hypertension", "heart_disease", "ever_married", "work_type", "residence_type", "avg_glucose_level", "smoking_status", "bmi"],
+        clinicalMessage: "Vascular, demographic, glucose, and smoking variables are prioritized."
+      }
+    ];
+
+    const demoData = {
+      heart: `age,sex,cp,trestbps,chol,fbs,restecg,thalach,exang,oldpeak,target
+63,M,typical angina,145,233,1,normal,150,no,2.3,1
+37,M,non-anginal,130,250,0,st-t abnormality,187,no,3.5,1
+41,F,atypical angina,130,204,0,normal,172,no,1.4,1
+56,M,asymptomatic,120,236,0,lv hypertrophy,178,no,0.8,1
+57,F,asymptomatic,120,354,0,normal,163,yes,0.6,1
+57,M,asymptomatic,140,192,0,normal,148,no,0.4,0
+56,F,atypical angina,140,294,0,st-t abnormality,153,no,1.3,1
+44,M,atypical angina,120,263,0,normal,173,no,0,1
+52,M,non-anginal,172,199,1,normal,162,no,0.5,1
+57,M,non-anginal,150,168,0,normal,174,no,1.6,1
+54,M,asymptomatic,140,239,0,normal,160,no,1.2,0
+48,F,non-anginal,130,275,0,normal,139,no,0.2,1
+49,M,atypical angina,130,266,0,normal,171,no,0.6,1
+64,M,asymptomatic,110,211,0,lv hypertrophy,144,yes,1.8,0
+58,F,asymptomatic,150,283,1,lv hypertrophy,162,no,1,1`,
+      diabetes: `Pregnancies,Glucose,BloodPressure,SkinThickness,Insulin,BMI,DiabetesPedigreeFunction,Age,Outcome
+6,148,72,35,0,33.6,0.627,50,1
+1,85,66,29,0,26.6,0.351,31,0
+8,183,64,0,0,23.3,0.672,32,1
+1,89,66,23,94,28.1,0.167,21,0
+0,137,40,35,168,43.1,2.288,33,1
+5,116,74,0,0,25.6,0.201,30,0
+3,78,50,32,88,31,0.248,26,1
+10,115,0,0,0,35.3,0.134,29,0
+2,197,70,45,543,30.5,0.158,53,1
+8,125,96,0,0,0,0.232,54,1
+4,110,92,0,0,37.6,0.191,30,0
+10,168,74,0,0,38,0.537,34,1
+10,139,80,0,0,27.1,1.441,57,0
+1,189,60,23,846,30.1,0.398,59,1
+5,166,72,19,175,25.8,0.587,51,1`,
+      breast: `mean_radius,mean_texture,mean_perimeter,mean_area,mean_smoothness,mean_compactness,mean_concavity,mean_symmetry,diagnosis
+17.99,10.38,122.8,1001,0.1184,0.2776,0.3001,0.2419,M
+20.57,17.77,132.9,1326,0.0847,0.0786,0.0869,0.1812,M
+19.69,21.25,130,1203,0.1096,0.1599,0.1974,0.2069,M
+11.42,20.38,77.58,386.1,0.1425,0.2839,0.2414,0.2597,M
+20.29,14.34,135.1,1297,0.1003,0.1328,0.198,0.1809,M
+12.45,15.7,82.57,477.1,0.1278,0.17,0.1578,0.2087,B
+18.25,19.98,119.6,1040,0.0946,0.109,0.1127,0.1794,M
+13.71,20.83,90.2,577.9,0.1189,0.1645,0.0937,0.2196,B
+13,21.82,87.5,519.8,0.1273,0.1932,0.1859,0.235,B
+12.46,24.04,83.97,475.9,0.1186,0.2396,0.2273,0.203,B
+16.02,23.24,102.7,797.8,0.0821,0.0667,0.03299,0.1528,M
+15.78,17.89,103.6,781,0.0971,0.1292,0.09954,0.1842,M
+19.17,24.8,132.4,1123,0.0974,0.2458,0.2065,0.2397,M
+15.85,23.95,103.7,782.7,0.084,0.1002,0.09938,0.1847,M
+13.73,22.61,93.6,578.3,0.1131,0.2293,0.2128,0.2069,B`,
+      stroke: `gender,age,hypertension,heart_disease,ever_married,work_type,Residence_type,avg_glucose_level,bmi,smoking_status,stroke
+Male,67,0,1,Yes,Private,Urban,228.69,36.6,formerly smoked,1
+Female,61,0,0,Yes,Self-employed,Rural,202.21,28.1,never smoked,1
+Male,80,0,1,Yes,Private,Rural,105.92,32.5,never smoked,1
+Female,49,0,0,Yes,Private,Urban,171.23,34.4,smokes,1
+Female,79,1,0,Yes,Self-employed,Rural,174.12,24,never smoked,1
+Male,81,0,0,Yes,Private,Urban,186.21,29,formerly smoked,1
+Male,74,1,1,Yes,Private,Rural,70.09,27.4,never smoked,1
+Female,69,0,0,No,Private,Urban,94.39,22.8,never smoked,0
+Female,59,0,0,Yes,Private,Rural,76.15,28,Unknown,0
+Female,78,0,0,Yes,Private,Urban,58.57,24.2,Unknown,0
+Male,54,0,0,Yes,Govt_job,Urban,104.51,27.3,smokes,0
+Male,82,0,1,Yes,Private,Rural,144.9,26.4,smokes,1
+Female,64,0,0,Yes,Self-employed,Urban,84.45,30.9,never smoked,0
+Male,43,0,0,Yes,Private,Rural,96.77,33.8,never smoked,0
+Female,52,1,0,Yes,Private,Urban,233.29,48.9,never smoked,1`
+    };
+
+    const $ = (id) => document.getElementById(id);
+
+    function normalizeName(value) {
+      return String(value || "").toLowerCase().replace(/[^a-z0-9]/g, "");
+    }
+
+    function isMissing(value) {
+      return value === null || value === undefined || String(value).trim() === "" || String(value).trim().toLowerCase() === "na";
+    }
+
+    function toNumber(value) {
+      if (isMissing(value)) return null;
+      const cleaned = String(value).replace(/,/g, "").trim();
+      if (cleaned === "") return null;
+      const n = Number(cleaned);
+      return Number.isFinite(n) ? n : null;
+    }
+
+    function parseCsv(text) {
+      const rows = [];
+      let row = [];
+      let cell = "";
+      let quoted = false;
+      const cleanText = String(text || "").replace(/\r\n/g, "\n").replace(/\r/g, "\n");
+      for (let i = 0; i < cleanText.length; i++) {
+        const ch = cleanText[i];
+        const next = cleanText[i + 1];
+        if (ch === '"' && quoted && next === '"') {
+          cell += '"';
+          i++;
+        } else if (ch === '"') {
+          quoted = !quoted;
+        } else if (ch === "," && !quoted) {
+          row.push(cell.trim());
+          cell = "";
+        } else if (ch === "\n" && !quoted) {
+          row.push(cell.trim());
+          if (row.some(v => v !== "")) rows.push(row);
+          row = [];
+          cell = "";
+        } else {
+          cell += ch;
+        }
+      }
+      row.push(cell.trim());
+      if (row.some(v => v !== "")) rows.push(row);
+      if (rows.length < 2) throw new Error("The CSV needs a header row and at least one data row.");
+      const headers = rows[0].map((h, i) => h || `Column_${i + 1}`);
+      return rows.slice(1).map(values => {
+        const obj = {};
+        headers.forEach((h, i) => { obj[h] = values[i] ?? ""; });
+        return obj;
+      });
+    }
+
+    function getColumnStats(rows, columns) {
+      return columns.map(col => {
+        const values = rows.map(r => r[col]);
+        const missing = values.filter(isMissing).length;
+        const numericValues = values.map(toNumber).filter(v => v !== null);
+        const unique = new Set(values.filter(v => !isMissing(v)).map(v => String(v))).size;
+        const numericRatio = rows.length ? numericValues.length / rows.length : 0;
+        const type = numericRatio >= 0.75 ? "numeric" : unique <= 8 ? "categorical" : "text";
+        const mean = numericValues.length ? avg(numericValues) : null;
+        return { col, missing, unique, numericValues, numericRatio, type, mean };
+      });
+    }
+
+    function avg(values) {
+      return values.reduce((a, b) => a + b, 0) / values.length;
+    }
+
+    function stdev(values) {
+      if (values.length < 2) return 0;
+      const m = avg(values);
+      return Math.sqrt(avg(values.map(v => (v - m) ** 2)));
+    }
+
+    function detectDisease(columns) {
+      const normalized = columns.map(normalizeName);
+      const scores = diseaseProfiles.map(profile => {
+        const keywordHits = profile.keywords.filter(k => normalized.some(c => c.includes(normalizeName(k)) || normalizeName(k).includes(c))).length;
+        const targetHits = profile.targetHints.filter(k => normalized.some(c => c.includes(normalizeName(k)))).length;
+        return { profile, score: keywordHits * 2 + targetHits * 1.5, keywordHits, targetHits };
+      }).sort((a, b) => b.score - a.score);
+      const best = scores[0];
+      const confidence = Math.min(98, Math.round(45 + best.score * 7));
+      return { ...best.profile, confidence, matches: scores };
+    }
+
+    function detectTarget(rows, columns, disease) {
+      const normalizedMap = new Map(columns.map(c => [c, normalizeName(c)]));
+      const candidateScores = columns.map(col => {
+        const name = normalizedMap.get(col);
+        const values = rows.map(r => r[col]).filter(v => !isMissing(v));
+        const unique = [...new Set(values.map(v => String(v)))];
+        const hint = disease.targetHints.some(h => name === normalizeName(h) || name.includes(normalizeName(h))) ? 10 : 0;
+        const binary = unique.length === 2 ? 4 : unique.length <= 4 ? 2 : 0;
+        const endBonus = col === columns[columns.length - 1] ? 1 : 0;
+        const avoid = ["age", "sex", "gender", "bmi"].includes(name) ? -5 : 0;
+        return { col, score: hint + binary + endBonus + avoid, unique };
+      }).sort((a, b) => b.score - a.score);
+      return candidateScores[0]?.score > 1 ? candidateScores[0].col : columns[columns.length - 1];
+    }
+
+    function encodeTarget(value) {
+      if (isMissing(value)) return null;
+      const text = String(value).trim().toLowerCase();
+      if (["1", "yes", "true", "positive", "m", "malignant", "disease", "stroke", "diabetic"].includes(text)) return 1;
+      if (["0", "no", "false", "negative", "b", "benign", "normal", "healthy"].includes(text)) return 0;
+      const n = toNumber(value);
+      if (n !== null) return n > 0 ? 1 : 0;
+      return null;
+    }
+
+    function encodeFeature(value, mapping) {
+      const n = toNumber(value);
+      if (n !== null) return n;
+      if (isMissing(value)) return 0;
+      const key = String(value).trim().toLowerCase();
+      if (!mapping.has(key)) mapping.set(key, mapping.size + 1);
+      return mapping.get(key);
+    }
+
+    function pearson(x, y) {
+      const pairs = x.map((v, i) => [v, y[i]]).filter(p => Number.isFinite(p[0]) && Number.isFinite(p[1]));
+      if (pairs.length < 3) return 0;
+      const xs = pairs.map(p => p[0]);
+      const ys = pairs.map(p => p[1]);
+      const mx = avg(xs);
+      const my = avg(ys);
+      const numerator = pairs.reduce((s, p) => s + (p[0] - mx) * (p[1] - my), 0);
+      const denom = Math.sqrt(pairs.reduce((s, p) => s + (p[0] - mx) ** 2, 0) * pairs.reduce((s, p) => s + (p[1] - my) ** 2, 0));
+      return denom ? numerator / denom : 0;
+    }
+
+    function sigmoid(value) {
+      if (value > 35) return 1;
+      if (value < -35) return 0;
+      return 1 / (1 + Math.exp(-value));
+    }
+
+    function aucScore(labels, scores) {
+      const positives = [];
+      const negatives = [];
+      labels.forEach((label, i) => (label === 1 ? positives : negatives).push(scores[i]));
+      if (!positives.length || !negatives.length) return null;
+      let wins = 0;
+      positives.forEach(p => {
+        negatives.forEach(n => {
+          if (p > n) wins += 1;
+          else if (p === n) wins += 0.5;
+        });
+      });
+      return wins / (positives.length * negatives.length);
+    }
+
+    function buildModel(rows, target, associations) {
+      const features = associations.slice(0, Math.min(8, associations.length)).map(a => a.col);
+      const usableRows = rows
+        .map((row, index) => ({ row, index, y: encodeTarget(row[target]) }))
+        .filter(item => item.y === 0 || item.y === 1);
+
+      if (features.length === 0 || usableRows.length < 6) {
+        return {
+          ready: false,
+          features,
+          message: "Not enough rows or usable predictors to train a validation model."
+        };
+      }
+
+      const mappings = {};
+      features.forEach(col => { mappings[col] = new Map(); });
+      const raw = usableRows.map(item => ({
+        y: item.y,
+        x: features.map(col => encodeFeature(item.row[col], mappings[col]))
+      }));
+
+      const positives = raw.filter(r => r.y === 1);
+      const negatives = raw.filter(r => r.y === 0);
+      const test = [];
+      const train = [];
+      [positives, negatives].forEach(group => {
+        const holdoutEvery = Math.max(3, Math.floor(group.length / Math.max(1, Math.round(group.length * 0.25))));
+        group.forEach((row, i) => {
+          if (group.length > 2 && i % holdoutEvery === 0) test.push(row);
+          else train.push(row);
+        });
+      });
+      const validationRows = test.length >= 3 && train.length >= 3 ? test : raw;
+      const trainingRows = test.length >= 3 && train.length >= 3 ? train : raw;
+      const means = features.map((_, j) => avg(trainingRows.map(r => r.x[j])));
+      const sds = features.map((_, j) => stdev(trainingRows.map(r => r.x[j])) || 1);
+      const scale = vector => vector.map((v, j) => (v - means[j]) / sds[j]);
+      const xTrain = trainingRows.map(r => scale(r.x));
+      const yTrain = trainingRows.map(r => r.y);
+      const weights = Array(features.length + 1).fill(0);
+      const learningRate = 0.08;
+      const regularization = 0.01;
+
+      for (let epoch = 0; epoch < 900; epoch++) {
+        const gradient = Array(weights.length).fill(0);
+        xTrain.forEach((x, i) => {
+          const z = weights[0] + x.reduce((sum, v, j) => sum + v * weights[j + 1], 0);
+          const error = sigmoid(z) - yTrain[i];
+          gradient[0] += error;
+          x.forEach((v, j) => { gradient[j + 1] += error * v; });
+        });
+        weights.forEach((weight, j) => {
+          const penalty = j === 0 ? 0 : regularization * weight;
+          weights[j] -= learningRate * ((gradient[j] / xTrain.length) + penalty);
+        });
+      }
+
+      const validationScores = validationRows.map(r => {
+        const x = scale(r.x);
+        return sigmoid(weights[0] + x.reduce((sum, v, j) => sum + v * weights[j + 1], 0));
+      });
+      const validationLabels = validationRows.map(r => r.y);
+      const predicted = validationScores.map(score => score >= 0.5 ? 1 : 0);
+      const correct = predicted.filter((pred, i) => pred === validationLabels[i]).length;
+      const tp = predicted.filter((pred, i) => pred === 1 && validationLabels[i] === 1).length;
+      const tn = predicted.filter((pred, i) => pred === 0 && validationLabels[i] === 0).length;
+      const fp = predicted.filter((pred, i) => pred === 1 && validationLabels[i] === 0).length;
+      const fn = predicted.filter((pred, i) => pred === 0 && validationLabels[i] === 1).length;
+      const precision = tp + fp ? tp / (tp + fp) : 0;
+      const recall = tp + fn ? tp / (tp + fn) : 0;
+      const f1 = precision + recall ? 2 * precision * recall / (precision + recall) : 0;
+
+      return {
+        ready: true,
+        features,
+        mappings,
+        means,
+        sds,
+        weights,
+        metrics: {
+          validationSize: validationRows.length,
+          trainingSize: trainingRows.length,
+          accuracy: correct / validationRows.length,
+          precision,
+          recall,
+          f1,
+          auc: aucScore(validationLabels, validationScores),
+          confusion: { tp, tn, fp, fn }
+        }
+      };
+    }
+
+    function predictWithModel(model, values) {
+      if (!model?.ready) return null;
+      const scaled = model.features.map((col, j) => {
+        const encoded = encodeFeature(values[col], model.mappings[col]);
+        return (encoded - model.means[j]) / (model.sds[j] || 1);
+      });
+      const z = model.weights[0] + scaled.reduce((sum, v, j) => sum + v * model.weights[j + 1], 0);
+      const contributions = model.features.map((col, j) => ({
+        col,
+        value: scaled[j] * model.weights[j + 1],
+        strength: Math.abs(scaled[j] * model.weights[j + 1])
+      })).sort((a, b) => b.strength - a.strength);
+      return { probability: sigmoid(z), contributions };
+    }
+
+    function profileDataset(rows, source) {
+      const columns = Object.keys(rows[0] || {});
+      const disease = detectDisease(columns);
+      const target = detectTarget(rows, columns, disease);
+      const stats = getColumnStats(rows, columns);
+      const features = columns.filter(c => c !== target);
+      const targetValues = rows.map(r => encodeTarget(r[target]));
+      const featureMappings = {};
+      const associations = features.map(col => {
+        const mapping = new Map();
+        const x = rows.map(r => encodeFeature(r[col], mapping));
+        featureMappings[col] = mapping;
+        const corr = pearson(x, targetValues);
+        return {
+          col,
+          score: Math.abs(corr),
+          direction: corr >= 0 ? "higher" : "lower",
+          corr,
+          type: stats.find(s => s.col === col)?.type || "text"
+        };
+      }).sort((a, b) => b.score - a.score);
+      const numeric = stats.filter(s => s.col !== target && s.type === "numeric");
+      const categorical = stats.filter(s => s.col !== target && s.type !== "numeric");
+      const targetSummary = summarizeTarget(rows, target);
+      const model = buildModel(rows, target, associations);
+      return {
+        source,
+        columns,
+        rowCount: rows.length,
+        disease,
+        target,
+        stats,
+        features,
+        numeric,
+        categorical,
+        associations,
+        featureMappings,
+        targetSummary,
+        model,
+        missingTotal: stats.reduce((s, x) => s + x.missing, 0),
+        duplicateCount: countDuplicates(rows)
+      };
+    }
+
+    function summarizeTarget(rows, target) {
+      const counts = {};
+      rows.forEach(r => {
+        const label = isMissing(r[target]) ? "Missing" : String(r[target]);
+        counts[label] = (counts[label] || 0) + 1;
+      });
+      const encoded = rows.map(r => encodeTarget(r[target])).filter(v => v !== null);
+      const positiveRate = encoded.length ? avg(encoded) : 0;
+      return { counts, positiveRate };
+    }
+
+    function countDuplicates(rows) {
+      const seen = new Set();
+      let dupes = 0;
+      rows.forEach(row => {
+        const key = JSON.stringify(row);
+        if (seen.has(key)) dupes++;
+        seen.add(key);
+      });
+      return dupes;
+    }
+
+    function loadRows(rows, source) {
+      if (!rows.length) return;
+      state.rows = rows;
+      state.columns = Object.keys(rows[0]);
+      state.source = source;
+      state.profile = profileDataset(rows, source);
+      renderAll();
+    }
+
+    function renderAll() {
+      renderSidebar();
+      renderKpis();
+      renderDetection();
+      renderOutcomeChart();
+      renderInsights();
+      renderVariableMap();
+      renderPreview();
+      renderQuality();
+      renderSummary();
+      renderNumericChart();
+      renderAssociationChart();
+      renderRiskForm();
+      renderModelCards();
+      renderImportanceChart();
+      renderInterpretation();
+      renderReport();
+    }
+
+    function renderSidebar() {
+      const p = state.profile;
+      $("sideStatus").innerHTML = p ? `
+        <strong>${p.disease.name}</strong>
+        Target: ${p.target}<br>
+        Rows: ${p.rowCount} | Columns: ${p.columns.length}<br>
+        Confidence: ${p.disease.confidence}%
+      ` : `<strong>No dataset loaded</strong>Choose a demo dataset or upload a CSV file to activate adaptive analysis.`;
+    }
+
+    function renderKpis() {
+      const p = state.profile;
+      const html = p ? [
+        kpi("Detected Dataset", p.disease.name, `${p.disease.confidence}% confidence`),
+        kpi("Rows Analyzed", p.rowCount, `${p.columns.length} variables detected`),
+        kpi("Outcome Column", p.target, `${Math.round(p.targetSummary.positiveRate * 100)}% positive class`),
+        kpi("Top Risk Signal", p.associations[0]?.col || "None", `${Math.round((p.associations[0]?.score || 0) * 100)}% association strength`)
+      ].join("") : [
+        kpi("Detected Dataset", "None", "Load a dataset to begin"),
+        kpi("Rows Analyzed", "--", "CSV data appears here"),
+        kpi("Outcome Column", "--", "Auto-detected after upload"),
+        kpi("Top Risk Signal", "--", "Calculated from feature relationships")
+      ].join("");
+      $("kpiGrid").innerHTML = html;
+    }
+
+    function kpi(label, value, note) {
+      return `<div class="kpi"><span>${escapeHtml(label)}</span><b>${escapeHtml(String(value))}</b><small>${escapeHtml(note)}</small></div>`;
+    }
+
+    function renderDetection() {
+      const p = state.profile;
+      $("detectConfidence").textContent = p ? `${p.disease.confidence}% confidence` : "Waiting for data";
+      $("detectionTimeline").innerHTML = p ? `
+        ${step(1, "Read uploaded schema", `${p.columns.length} columns found from ${p.source}.`)}
+        ${step(2, "Detect disease context", `${p.disease.name} selected from clinical keyword matches.`)}
+        ${step(3, "Identify target variable", `${p.target} is treated as the prediction outcome.`)}
+        ${step(4, "Adapt analytics workflow", `${p.disease.clinicalMessage}`)}
+      ` : `
+        ${step(1, "Load data", "Use a demo dataset or upload a CSV file.")}
+        ${step(2, "Detection", "HealthStat AI will inspect column names and variable patterns.")}
+        ${step(3, "Analysis", "Dashboards, risk factors, and report sections will update automatically.")}
+      `;
+    }
+
+    function step(n, title, text) {
+      return `<div class="step"><div class="dot">${n}</div><div><b>${escapeHtml(title)}</b><p>${escapeHtml(text)}</p></div></div>`;
+    }
+
+    function renderInsights() {
+      const p = state.profile;
+      const items = p ? [
+        `${p.disease.name} was detected from fields such as ${p.associations.slice(0, 3).map(a => a.col).join(", ")}.`,
+        `${p.target} is the model outcome, with ${Math.round(p.targetSummary.positiveRate * 100)}% of records in the positive class.`,
+        `${p.associations[0]?.col || "The leading feature"} shows the strongest observed relationship with the outcome in this dataset.`,
+        p.missingTotal ? `${p.missingTotal} missing values were found and should be reviewed before clinical use.` : "No missing values were detected in the loaded records.",
+        "This browser prototype demonstrates adaptive analysis logic; real deployment should add validation, larger datasets, and clinician-reviewed model governance."
+      ] : [
+        "Load a dataset to generate automatic clinical insights.",
+        "The app can adapt to heart disease, diabetes, breast cancer, stroke, and other healthcare CSV structures.",
+        "The same pipeline is reused across datasets, which makes the project portfolio-ready."
+      ];
+      $("clinicalInsights").innerHTML = items.map(x => `<li>${escapeHtml(x)}</li>`).join("");
+    }
+
+    function renderVariableMap() {
+      const p = state.profile;
+      if (!p) {
+        $("variableMap").innerHTML = `<ul class="insight-list"><li>No variable map yet.</li></ul>`;
+        return;
+      }
+      const demographics = p.features.filter(c => /age|sex|gender|married|residence|work/i.test(c));
+      const clinical = p.features.filter(c => /pressure|chol|glucose|bmi|insulin|hypertension|heart|radius|texture|area|perimeter|smooth|concav|symmetry|thal|angina|smoking/i.test(c));
+      const other = p.features.filter(c => !demographics.includes(c) && !clinical.includes(c));
+      $("variableMap").innerHTML = `
+        ${pillGroup("Demographic", demographics, "blue")}
+        ${pillGroup("Clinical / Laboratory", clinical, "green")}
+        ${pillGroup("Other Predictors", other, "violet")}
+        ${pillGroup("Outcome", [p.target], "red")}
+      `;
+    }
+
+    function pillGroup(title, items, color) {
+      const content = items.length ? items.map(i => `<span class="badge ${color}">${escapeHtml(i)}</span>`).join(" ") : `<span class="badge">None detected</span>`;
+      return `<div style="margin-bottom:14px"><b>${escapeHtml(title)}</b><div style="height:8px"></div><div style="display:flex;gap:8px;flex-wrap:wrap">${content}</div></div>`;
+    }
+
+    function renderPreview() {
+      const p = state.profile;
+      $("previewLabel").textContent = p ? `${p.rowCount} rows loaded` : "No rows loaded";
+      $("previewTable").innerHTML = p ? tableFromRows(state.rows.slice(0, 10), p.columns) : `<div style="padding:18px;color:#637083">No dataset loaded.</div>`;
+    }
+
+    function renderQuality() {
+      const p = state.profile;
+      $("qualityGrid").innerHTML = p ? [
+        kpi("Missing Values", p.missingTotal, p.missingTotal ? "Review before modeling" : "Clean sample"),
+        kpi("Duplicate Rows", p.duplicateCount, p.duplicateCount ? "May bias analysis" : "No duplicates detected"),
+        kpi("Numeric Features", p.numeric.length, `${p.categorical.length} categorical/text features`)
+      ].join("") : [
+        kpi("Missing Values", "--", "Waiting for data"),
+        kpi("Duplicate Rows", "--", "Waiting for data"),
+        kpi("Numeric Features", "--", "Waiting for data")
+      ].join("");
+    }
+
+    function renderSummary() {
+      const p = state.profile;
+      $("summaryLabel").textContent = p ? `${p.columns.length} variables` : "Waiting for dataset";
+      if (!p) {
+        $("summaryTable").innerHTML = `<div style="padding:18px;color:#637083">No summary yet.</div>`;
+        return;
+      }
+      const rows = p.stats.map(s => ({
+        Variable: s.col,
+        Type: s.type,
+        Missing: s.missing,
+        Unique: s.unique,
+        Mean: s.mean === null ? "" : round(s.mean, 2)
+      }));
+      $("summaryTable").innerHTML = tableFromRows(rows, ["Variable", "Type", "Missing", "Unique", "Mean"]);
+    }
+
+    function renderRiskForm() {
+      const p = state.profile;
+      $("simulatorLabel").textContent = p ? p.disease.name : "Auto-built from dataset";
+      if (!p) {
+        $("riskForm").innerHTML = `<div style="color:#637083">Load a dataset to build patient inputs.</div>`;
+        return;
+      }
+      const top = p.associations.slice(0, 8);
+      $("riskForm").innerHTML = top.map(a => {
+        const stat = p.stats.find(s => s.col === a.col);
+        const values = state.rows.map(r => r[a.col]).filter(v => !isMissing(v));
+        if (stat?.type === "numeric") {
+          const nums = values.map(toNumber).filter(v => v !== null);
+          const min = Math.min(...nums);
+          const max = Math.max(...nums);
+          const val = round(stat.mean || 0, 2);
+          return `<div class="field"><label>${escapeHtml(a.col)}</label><input data-risk-input="${escapeAttr(a.col)}" type="number" step="any" min="${min}" max="${max}" value="${val}"></div>`;
+        }
+        const options = [...new Set(values.map(String))].slice(0, 8);
+        return `<div class="field"><label>${escapeHtml(a.col)}</label><select data-risk-input="${escapeAttr(a.col)}">${options.map(o => `<option>${escapeHtml(o)}</option>`).join("")}</select></div>`;
+      }).join("");
+    }
+
+    function calculateRisk() {
+      const p = state.profile;
+      if (!p) return;
+      const inputs = [...document.querySelectorAll("[data-risk-input]")];
+      const values = {};
+      inputs.forEach(input => { values[input.getAttribute("data-risk-input")] = input.value; });
+      const prediction = predictWithModel(p.model, values);
+      if (!prediction) {
+        renderRiskScore(p.targetSummary.positiveRate || 0.5, ["Not enough valid data to train the adaptive logistic model. Showing dataset baseline risk."]);
+        return;
+      }
+      const explanation = prediction.contributions.slice(0, 5).map(item => {
+        const direction = item.value >= 0 ? "raises" : "lowers";
+        return `${item.col}: ${direction} the model score by ${round(Math.abs(item.value), 2)} log-odds units`;
+      });
+      renderRiskScore(prediction.probability, explanation);
+    }
+
+    function renderRiskScore(risk, explanation) {
+      risk = Math.max(0.01, Math.min(0.99, risk));
+      const pct = Math.round(risk * 100);
+      const color = pct >= 70 ? "var(--red)" : pct >= 45 ? "var(--amber)" : "var(--green)";
+      $("scoreRing").style.background = `conic-gradient(${color} 0deg, ${color} ${risk * 360}deg, #e5ebf2 ${risk * 360}deg)`;
+      $("riskScore").textContent = `${pct}%`;
+      $("riskClass").textContent = pct >= 70 ? "High risk" : pct >= 45 ? "Moderate risk" : "Lower risk";
+      $("riskExplanation").innerHTML = explanation.map(x => `<li>${escapeHtml(x)}</li>`).join("");
+    }
+
+    function renderModelCards() {
+      const p = state.profile;
+      if (!p) {
+        $("modelGrid").innerHTML = [kpi("Model", "--", "Load data"), kpi("Validation Accuracy", "--", "Load data"), kpi("ROC-AUC", "--", "Load data")].join("");
+        return;
+      }
+      if (!p.model.ready) {
+        $("modelGrid").innerHTML = [
+          kpi("Selected Model", "Adaptive Logistic Regression", p.model.message),
+          kpi("Validation Accuracy", "--", "More rows needed"),
+          kpi("ROC-AUC", "--", "More class balance needed")
+        ].join("");
+        return;
+      }
+      const metrics = p.model.metrics;
+      $("modelGrid").innerHTML = [
+        kpi("Selected Model", "Adaptive Logistic Regression", `${p.model.features.length} top features trained in-browser`),
+        kpi("Validation Accuracy", `${Math.round(metrics.accuracy * 100)}%`, `${metrics.validationSize} holdout records`),
+        kpi("ROC-AUC", metrics.auc === null ? "N/A" : round(metrics.auc, 2), `F1 ${round(metrics.f1, 2)} | Precision ${round(metrics.precision, 2)} | Recall ${round(metrics.recall, 2)}`)
+      ].join("");
+    }
+
+    function renderInterpretation() {
+      const p = state.profile;
+      $("templateLabel").textContent = p ? p.disease.badge : "Adaptive language";
+      const modelNote = p?.model?.ready
+        ? `The model was trained as an in-browser logistic regression and checked on ${p.model.metrics.validationSize} validation records.`
+        : "The model needs more usable rows before validation metrics can be shown.";
+      const items = p ? [
+        `For ${p.disease.name.toLowerCase()}, the model emphasizes ${p.associations.slice(0, 3).map(a => a.col).join(", ")}.`,
+        modelNote,
+        `A higher predicted probability means the patient profile resembles records with positive ${p.target} outcomes in this dataset.`,
+        `The analysis is explainable because each top feature is ranked by measurable association with the outcome.`,
+        `Before clinical use, the model should be validated on a larger external dataset and reviewed for bias, calibration, and intended-use limitations.`
+      ] : [
+        "Load a dataset to generate disease-specific interpretation language."
+      ];
+      $("interpretationList").innerHTML = items.map(x => `<li>${escapeHtml(x)}</li>`).join("");
+    }
+
+    function renderReport() {
+      const p = state.profile;
+      if (!p) {
+        $("reportBody").innerHTML = `<p style="color:#637083;margin:0">Load a dataset to generate the clinical report.</p>`;
+        return;
+      }
+      const modelLine = p.model.ready
+        ? `The adaptive logistic model used ${p.model.features.length} predictors and reached ${Math.round(p.model.metrics.accuracy * 100)}% validation accuracy on ${p.model.metrics.validationSize} holdout records, with F1 ${round(p.model.metrics.f1, 2)} and ROC-AUC ${p.model.metrics.auc === null ? "not available because one validation class was missing" : round(p.model.metrics.auc, 2)}.`
+        : p.model.message;
+      $("reportBody").innerHTML = `
+        <h2 style="margin-top:0">${escapeHtml(p.disease.name)} Report</h2>
+        <p><strong>Dataset source:</strong> ${escapeHtml(p.source)}</p>
+        <p><strong>Dataset structure:</strong> ${p.rowCount} patient records and ${p.columns.length} variables were analyzed. The detected outcome variable is <strong>${escapeHtml(p.target)}</strong>.</p>
+        <p><strong>Adaptive detection:</strong> HealthStat AI classified this dataset as <strong>${escapeHtml(p.disease.name)}</strong> with ${p.disease.confidence}% confidence.</p>
+        <p><strong>Data quality:</strong> ${p.missingTotal} missing values and ${p.duplicateCount} duplicate rows were detected.</p>
+        <p><strong>Model validation:</strong> ${escapeHtml(modelLine)}</p>
+        <p><strong>Top risk factors:</strong> ${escapeHtml(p.associations.slice(0, 5).map(a => a.col).join(", "))}.</p>
+        <p><strong>Clinical interpretation:</strong> ${escapeHtml(p.disease.clinicalMessage)} The positive outcome rate is ${Math.round(p.targetSummary.positiveRate * 100)}% in the loaded records.</p>
+        <p><strong>Recommendation:</strong> Use this adaptive workflow as a portfolio-ready analytics demonstration. For real clinical deployment, add larger validated datasets, audited preprocessing, model calibration, explainability review, and privacy controls.</p>
+      `;
+    }
+
+    function tableFromRows(rows, columns) {
+      if (!rows.length) return `<div style="padding:18px;color:#637083">No rows to display.</div>`;
+      return `<table><thead><tr>${columns.map(c => `<th>${escapeHtml(c)}</th>`).join("")}</tr></thead><tbody>${
+        rows.map(r => `<tr>${columns.map(c => `<td>${escapeHtml(r[c] ?? "")}</td>`).join("")}</tr>`).join("")
+      }</tbody></table>`;
+    }
+
+    function renderOutcomeChart() {
+      const p = state.profile;
+      $("outcomeLabel").textContent = p ? p.target : "No outcome detected";
+      const data = p ? Object.entries(p.targetSummary.counts).map(([label, value]) => ({ label, value })) : [];
+      drawBarChart("outcomeChart", data, { color: "#2266d2", horizontal: false });
+    }
+
+    function renderNumericChart() {
+      const p = state.profile;
+      const data = p ? p.numeric.slice(0, 10).map(s => ({ label: s.col, value: Math.abs(s.mean || 0) })) : [];
+      drawBarChart("numericChart", data, { color: "#087c89", horizontal: true });
+    }
+
+    function renderAssociationChart() {
+      const p = state.profile;
+      const data = p ? p.associations.slice(0, 10).map(a => ({ label: a.col, value: Math.round(a.score * 100) })) : [];
+      drawBarChart("associationChart", data, { color: "#118a63", horizontal: true });
+    }
+
+    function renderImportanceChart() {
+      const p = state.profile;
+      const colors = ["#2266d2", "#118a63", "#cf3f45", "#a96f00", "#087c89", "#6b4cc2"];
+      const data = p ? p.associations.slice(0, 8).map((a, i) => ({ label: a.col, value: Math.round(a.score * 100), color: colors[i % colors.length] })) : [];
+      drawBarChart("importanceChart", data, { color: "#2266d2", horizontal: true, useItemColor: true });
+    }
+
+    function drawBarChart(canvasId, data, options) {
+      const canvas = $(canvasId);
+      const ctx = canvas.getContext("2d");
+      const ratio = window.devicePixelRatio || 1;
+      const rect = canvas.getBoundingClientRect();
+      canvas.width = Math.max(300, rect.width * ratio);
+      canvas.height = Math.max(220, rect.height * ratio);
+      ctx.scale(ratio, ratio);
+      const w = rect.width;
+      const h = rect.height;
+      ctx.clearRect(0, 0, w, h);
+      ctx.fillStyle = "#ffffff";
+      ctx.fillRect(0, 0, w, h);
+      if (!data.length) {
+        ctx.fillStyle = "#637083";
+        ctx.font = "14px sans-serif";
+        ctx.fillText("Load a dataset to render this chart.", 18, 34);
+        return;
+      }
+      const max = Math.max(...data.map(d => d.value), 1);
+      ctx.font = "12px sans-serif";
+      ctx.textBaseline = "middle";
+      if (options.horizontal) {
+        const left = 132;
+        const top = 16;
+        const gap = 8;
+        const barH = Math.max(14, Math.min(26, (h - top * 2 - gap * (data.length - 1)) / data.length));
+        data.forEach((d, i) => {
+          const y = top + i * (barH + gap);
+          const barW = (w - left - 30) * (d.value / max);
+          ctx.fillStyle = "#425066";
+          ctx.textAlign = "right";
+          ctx.fillText(trimLabel(d.label, 17), left - 10, y + barH / 2);
+          ctx.fillStyle = options.useItemColor ? d.color : options.color;
+          ctx.fillRect(left, y, barW, barH);
+          ctx.fillStyle = "#637083";
+          ctx.textAlign = "left";
+          ctx.fillText(String(round(d.value, 1)), left + barW + 6, y + barH / 2);
+        });
+      } else {
+        const bottom = h - 42;
+        const left = 34;
+        const gap = 16;
+        const barW = Math.max(30, (w - left * 2 - gap * (data.length - 1)) / data.length);
+        data.forEach((d, i) => {
+          const x = left + i * (barW + gap);
+          const barH = Math.max(2, (bottom - 18) * (d.value / max));
+          ctx.fillStyle = options.color;
+          ctx.fillRect(x, bottom - barH, barW, barH);
+          ctx.fillStyle = "#425066";
+          ctx.textAlign = "center";
+          ctx.fillText(trimLabel(d.label, 11), x + barW / 2, bottom + 18);
+          ctx.fillStyle = "#637083";
+          ctx.fillText(String(d.value), x + barW / 2, bottom - barH - 8);
+        });
+      }
+    }
+
+    function trimLabel(label, max) {
+      const text = String(label);
+      return text.length > max ? text.slice(0, Math.max(1, max - 3)) + "..." : text;
+    }
+
+    function downloadReport() {
+      const p = state.profile;
+      const modelLines = p?.model?.ready ? [
+        `Model: Adaptive logistic regression`,
+        `Validation rows: ${p.model.metrics.validationSize}`,
+        `Validation accuracy: ${Math.round(p.model.metrics.accuracy * 100)}%`,
+        `Precision: ${round(p.model.metrics.precision, 2)}`,
+        `Recall: ${round(p.model.metrics.recall, 2)}`,
+        `F1: ${round(p.model.metrics.f1, 2)}`,
+        `ROC-AUC: ${p.model.metrics.auc === null ? "N/A" : round(p.model.metrics.auc, 2)}`
+      ] : [`Model validation: ${p?.model?.message || "Load a dataset before validating the model."}`];
+      const text = p ? [
+        `HealthStat AI Clinical Report`,
+        ``,
+        `Dataset: ${p.source}`,
+        `Detected context: ${p.disease.name} (${p.disease.confidence}% confidence)`,
+        `Rows: ${p.rowCount}`,
+        `Columns: ${p.columns.length}`,
+        `Outcome: ${p.target}`,
+        `Positive outcome rate: ${Math.round(p.targetSummary.positiveRate * 100)}%`,
+        `Missing values: ${p.missingTotal}`,
+        `Duplicate rows: ${p.duplicateCount}`,
+        ``,
+        ...modelLines,
+        ``,
+        `Top risk factors:`,
+        ...p.associations.slice(0, 8).map((a, i) => `${i + 1}. ${a.col} - ${Math.round(a.score * 100)}% association strength`),
+        ``,
+        `Interpretation: ${p.disease.clinicalMessage}`,
+        ``,
+        `Clinical note: This is a portfolio analytics prototype and not a medical device.`
+      ].join("\n") : "Load a dataset before generating a report.";
+      const blob = new Blob([text], { type: "text/plain" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "healthstat-ai-report.txt";
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function setSection(section) {
+      state.currentSection = section;
+      document.querySelectorAll(".section").forEach(el => el.classList.toggle("active", el.id === section));
+      document.querySelectorAll(".nav-button").forEach(btn => btn.classList.toggle("active", btn.dataset.section === section));
+      const labels = {
+        dashboard: ["Overview", "Adaptive healthcare analytics across multiple dataset types."],
+        data: ["Data Intake", "Upload CSV data or load one of the built-in disease demos."],
+        eda: ["Exploratory Analysis", "Data quality, variable summaries, and feature relationships."],
+        model: ["Risk Prediction", "A dynamic patient risk simulator generated from the detected schema."],
+        explain: ["Explainable AI", "Ranked risk factors and dataset-specific interpretation language."],
+        report: ["Clinical Report", "A concise report generated from the active healthcare dataset."]
+      };
+      $("pageTitle").textContent = labels[section][0];
+      $("pageSub").textContent = labels[section][1];
+      setTimeout(() => {
+        renderOutcomeChart();
+        renderNumericChart();
+        renderAssociationChart();
+        renderImportanceChart();
+      }, 0);
+    }
+
+    function escapeHtml(value) {
+      return String(value).replace(/[&<>"']/g, ch => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[ch]));
+    }
+
+    function escapeAttr(value) {
+      return escapeHtml(value).replace(/"/g, "&quot;");
+    }
+
+    function round(value, places) {
+      const factor = 10 ** places;
+      return Math.round(value * factor) / factor;
+    }
+
+    document.querySelectorAll(".nav-button").forEach(btn => {
+      btn.addEventListener("click", () => setSection(btn.dataset.section));
+    });
+
+    document.querySelectorAll(".sample").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const key = btn.dataset.demo;
+        loadRows(parseCsv(demoData[key]), `${btn.textContent.trim()} demo`);
+        setSection("dashboard");
+      });
+    });
+
+    $("csvFile").addEventListener("change", async (event) => {
+      const file = event.target.files[0];
+      if (!file) return;
+      try {
+        const text = await file.text();
+        loadRows(parseCsv(text), file.name);
+        setSection("dashboard");
+      } catch (err) {
+        alert(err.message);
+      }
+    });
+
+    $("analyzePaste").addEventListener("click", () => {
+      try {
+        loadRows(parseCsv($("csvPaste").value), "Pasted CSV");
+        setSection("dashboard");
+      } catch (err) {
+        alert(err.message);
+      }
+    });
+
+    $("clearPaste").addEventListener("click", () => {
+      $("csvPaste").value = "";
+    });
+
+    $("scorePatient").addEventListener("click", calculateRisk);
+    $("downloadReport").addEventListener("click", downloadReport);
+    $("jumpUpload").addEventListener("click", () => setSection("data"));
+    $("startUpload").addEventListener("click", () => setSection("data"));
+    $("startDemo").addEventListener("click", () => {
+      loadRows(parseCsv(demoData.heart), "Heart Disease demo");
+      setSection("dashboard");
+    });
+
+    window.addEventListener("resize", () => {
+      renderOutcomeChart();
+      renderNumericChart();
+      renderAssociationChart();
+      renderImportanceChart();
+    });
+
+    loadRows(parseCsv(demoData.heart), "Heart Disease demo");
+  </script>
+</body>
+</html>
