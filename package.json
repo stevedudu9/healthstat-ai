@@ -1,0 +1,9 @@
+{
+  "name": "healthstat-ai",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Adaptive healthcare risk prediction and statistical analytics portfolio prototype.",
+  "scripts": {
+    "test": "node tests/test-healthstat.js && node tests/audit-ui.js"
+  }
+}
