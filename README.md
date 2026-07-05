@@ -58,6 +58,8 @@ The Streamlit version supports CSV, Excel, and JSON uploads, report generation, 
 
 After deployment, use `outputs/streamlit-deployment-checklist.md` to verify the live app.
 
+Sample upload files are included at `outputs/sample-heart-upload.csv` and `outputs/sample-heart-upload.json`. To test Excel upload, open the CSV in Excel or Google Sheets and save it as `.xlsx`.
+
 ## Portfolio Materials
 
 The following materials are included to help present, deploy, and discuss the project:

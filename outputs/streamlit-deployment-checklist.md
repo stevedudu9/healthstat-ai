@@ -26,7 +26,14 @@ After deployment, verify:
 
 ## Test File Formats
 
-You can test uploads by exporting one demo dataset to CSV, Excel, or JSON from any spreadsheet/data tool. The app accepts:
+You can test uploads with the included sample files:
+
+- `outputs/sample-heart-upload.csv`
+- `outputs/sample-heart-upload.json`
+
+For Excel, open `outputs/sample-heart-upload.csv` in Excel or Google Sheets and save it as `.xlsx`, then upload that file.
+
+The app accepts:
 
 - `.csv`
 - `.xlsx`
