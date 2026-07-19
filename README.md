@@ -4,6 +4,11 @@ HealthStat AI is a healthcare analytics portfolio prototype that adapts to multi
 
 The app can inspect an uploaded or demo dataset, detect the likely healthcare context, identify the target column, generate exploratory analytics, train a lightweight prediction model, display explainable risk factors, and produce a simple clinical-style report.
 
+## Live Demo
+
+- Streamlit app: [https://healthstat-ai.streamlit.app/](https://healthstat-ai.streamlit.app/)
+- Static web version: [https://stevedudu9.github.io/healthstat-ai/](https://stevedudu9.github.io/healthstat-ai/)
+
 ## Supported Demo Workflows
 
 - Heart Disease Prediction
